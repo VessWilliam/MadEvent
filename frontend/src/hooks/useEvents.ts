@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import {
+  createEventsService,
   getAllEventService,
   updateEventService,
 } from "../service/eventsService";
 import { IEvent } from "../types/eventTypes";
+import { useNavigate } from "react-router-dom";
 
 const splitDate = (dateTimeString: string) => {
   const [date, time] = dateTimeString.split("T");
@@ -12,6 +14,7 @@ const splitDate = (dateTimeString: string) => {
 
 export const useEvents = () => {
   const [events, setEvents] = useState<IEvent[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -38,5 +41,16 @@ export const useEvents = () => {
     }
   };
 
-  return { events, updateEvent };
+  const createEvent = async (createData: IEvent) => {
+    try {
+      const result = await createEventsService(createData);
+      if (result) {
+        navigate("/dashboard");
+      }
+    } catch (error: any) {
+      console.error("Failed to update event", error);
+    }
+  };
+
+  return { events, updateEvent, createEvent };
 };

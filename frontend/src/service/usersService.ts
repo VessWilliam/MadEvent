@@ -6,26 +6,24 @@ export const loginService = async (userLogin: IUserCredentials) => {
     const response = await apiClient.post("/users/login", userLogin);
 
     if (response.status < 200 || response.status >= 300) {
-      throw new Error(`Login failed with status code ${response.status}`);
+      console.error(`Login failed with status code ${response.status}`);
     }
     return response.data;
   } catch (error: any) {
-    throw new Error(`Error logging in: ${error.message}`);
+    console.error(`Error logging in: ${error.message}`);
   }
 };
 
 export const registerService = async (createUser: IUserRegistration) => {
   try {
-    const response = await apiClient.post("/users/register", {
-      createUser,
-    });
-
+    const response = await apiClient.post("/users/register", createUser);
+    console.log("hello" ,createUser)
     if (response.status < 200 || response.status >= 300) {
-      throw new Error(`Register failed with status code ${response.status}`);
+      console.error(`Register failed with status code ${response.status}`);
     }
-
+    ;
     return response.data;
   } catch (error: any) {
-    throw new Error(`Error signing in: ${error.message}`);
+    console.error(`Error register in: ${error.message}`);
   }
 };

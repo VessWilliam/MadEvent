@@ -15,21 +15,15 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import { useEvents } from "../../hooks/useEvents";
 import AddIcon from "@mui/icons-material/Add";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import { useState, useCallback } from "react";
 import { IEvent } from "../../types/eventTypes";
 
 function CreateNewEvent() {
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate("/CreateEvent");
-  };
-
   return (
     <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+      <Button color="primary" component={Link} to="/createvent" startIcon={<AddIcon />} >
         Add record
       </Button>
     </GridToolbarContainer>
@@ -120,30 +114,30 @@ export default function DataGridDemo() {
 
         return isInEditMode
           ? [
-              <GridActionsCellItem
-                key="save"
-                icon={<SaveIcon />}
-                label="Save"
-                color="warning"
-                onClick={handleSaveClick(id)}
-              />,
-              <GridActionsCellItem
-                key="cancel"
-                icon={<CancelIcon />}
-                label="Cancel"
-                onClick={handleCancelClick(id)}
-                color="warning"
-              />,
-            ]
+            <GridActionsCellItem
+              key="save"
+              icon={<SaveIcon />}
+              label="Save"
+              color="warning"
+              onClick={handleSaveClick(id)}
+            />,
+            <GridActionsCellItem
+              key="cancel"
+              icon={<CancelIcon />}
+              label="Cancel"
+              onClick={handleCancelClick(id)}
+              color="warning"
+            />,
+          ]
           : [
-              <GridActionsCellItem
-                key="edit"
-                icon={<EditIcon />}
-                label="Edit"
-                color="warning"
-                onClick={handleEditClick(id)}
-              />,
-            ];
+            <GridActionsCellItem
+              key="edit"
+              icon={<EditIcon />}
+              label="Edit"
+              color="warning"
+              onClick={handleEditClick(id)}
+            />,
+          ];
       },
     },
   ];

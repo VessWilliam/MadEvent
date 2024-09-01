@@ -1,36 +1,41 @@
 import apiClient from "../api/apiClient";
+import { IEvent } from "../types/eventTypes";
 
-interface IEvent {
-  name: string;
-  location: string;
-  thumbnail: string;
-  status: string;
-}
+export const createEventsService = async (createEvent: IEvent) => {
+  try {
+    const response = await apiClient.post("/event/create", createEvent);
+
+    if (response.status < 200 || response.status >= 300) {
+      console.error(`Create with status code ${response.status}`);
+    }
+
+    console.log(response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error(`Error Create event: ${error.message}`);
+  }
+};
 
 export const updateEventService = async (id: string, updatedata: IEvent) => {
   try {
     const response = await apiClient.put(`/event/${id}`, updatedata);
-
     if (response.status < 200 || response.status >= 300) {
-      throw new Error(`Update failed with status code ${response.status}`);
+      console.error(`Register with status code ${response.status}`);
     }
-     
-    console.log(response.data);
     return response.data;
   } catch (error: any) {
-    throw new Error(`Error updating event: ${error.message}`);
+    console.error(`Error update event: ${error.message}`);
   }
 };
 
 export const getAllEventService = async () => {
   try {
     const response = await apiClient.get("/event/all");
-
     if (response.status < 200 || response.status >= 300) {
-      throw new Error(`Login failed with status code ${response.status}`);
+      console.error(`Get all with status code ${response.status}`);
     }
     return response.data;
   } catch (error: any) {
-    throw new Error(`Error logging in: ${error.message}`);
+    console.error(`Error get all in: ${error.message}`);
   }
 };
