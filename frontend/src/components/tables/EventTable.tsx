@@ -1,185 +1,179 @@
-import React from "react";
-import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableFooter from "@mui/material/TableFooter";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import IconButton from "@mui/material/IconButton";
-import FirstPageIcon from "@mui/icons-material/FirstPage";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import LastPageIcon from "@mui/icons-material/LastPage";
-import Typography from "@mui/material/Typography";
-import { useEvents } from "../../hooks/eventHook";
-import TableHead from "@mui/material/TableHead";
+import {
+  DataGrid,
+  GridColDef,
+  GridActionsCellItem,
+  GridRowModes,
+  GridRowModesModel,
+  GridRowId,
+  GridToolbarContainer,
+  GridSlots,
+  GridRowModel,
+} from "@mui/x-data-grid";
+import { Button, Container } from "@mui/material";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Close";
+import { useEvents } from "../../hooks/useEvents";
+import AddIcon from "@mui/icons-material/Add";
+import { useNavigate } from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
+import { useState, useCallback } from "react";
+import { IEvent } from "../../types/eventTypes";
 
-interface TablePaginationActionsProps {
-  count: number;
-  page: number;
-  rowsPerPage: number;
-  onPageChange: (
-    event: React.MouseEvent<HTMLButtonElement>,
-    newPage: number
-  ) => void;
-}
+function CreateNewEvent() {
+  const navigate = useNavigate();
 
-function TablePaginationActions(props: TablePaginationActionsProps) {
-  const theme = useTheme();
-  const { count, page, rowsPerPage, onPageChange } = props;
-
-  const handleFirstPageButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    onPageChange(event, 0);
-  };
-
-  const handleBackButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    onPageChange(event, page - 1);
-  };
-
-  const handleNextButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    onPageChange(event, page + 1);
-  };
-
-  const handleLastPageButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+  const handleClick = () => {
+    navigate("/CreateEvent");
   };
 
   return (
-    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-      <IconButton
-        onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
-        aria-label="first page"
-      >
-        {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
-      </IconButton>
-      <IconButton
-        onClick={handleBackButtonClick}
-        disabled={page === 0}
-        aria-label="previous page"
-      >
-        {theme.direction === "rtl" ? (
-          <KeyboardArrowRight />
-        ) : (
-          <KeyboardArrowLeft />
-        )}
-      </IconButton>
-      <IconButton
-        onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="next page"
-      >
-        {theme.direction === "rtl" ? (
-          <KeyboardArrowLeft />
-        ) : (
-          <KeyboardArrowRight />
-        )}
-      </IconButton>
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="last page"
-      >
-        {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
-      </IconButton>
-    </Box>
+    <GridToolbarContainer>
+      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+        Add record
+      </Button>
+    </GridToolbarContainer>
   );
 }
 
-export default function CustomPaginationActionsTable() {
-  const { events, loading, error } = useEvents();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+export default function DataGridDemo() {
+  const { events, updateEvent } = useEvents();
+  const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - events.length) : 0;
+  const handleSaveClick = useCallback(
+    (id: GridRowId) => async () => {
+      setRowModesModel((prevModel) => ({
+        ...prevModel,
+        [id]: { mode: GridRowModes.View },
+      }));
+    },
+    []
+  );
 
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => {
-    setPage(newPage);
-  };
+  const processRowUpdate = useCallback(
+    async (newRow: GridRowModel) => {
+      const updatedRow = { ...newRow } as IEvent;
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+      try {
+        await updateEvent(updatedRow.id as any, {
+          name: updatedRow.name,
+          location: updatedRow.location,
+          thumbnail: updatedRow.thumbnail,
+          status: updatedRow.status,
+        });
+      } catch (error) {
+        console.error("Failed to update event", error);
+      }
 
-  if (loading) return <Typography>Loading...</Typography>;
-  if (error) return <Typography color="error">{error}</Typography>;
+      return updatedRow;
+    },
+    [updateEvent]
+  );
+
+  const handleCancelClick = useCallback(
+    (id: GridRowId) => () => {
+      setRowModesModel((prevModel) => ({
+        ...prevModel,
+        [id]: { mode: GridRowModes.View, ignoreModifications: true },
+      }));
+    },
+    []
+  );
+
+  const handleEditClick = useCallback(
+    (id: GridRowId) => () => {
+      setRowModesModel((prevModel) => ({
+        ...prevModel,
+        [id]: { mode: GridRowModes.Edit },
+      }));
+    },
+    []
+  );
+
+  const columns: GridColDef<IEvent>[] = [
+    { field: "name", headerName: "Name", width: 150, editable: true },
+    {
+      field: "startDate",
+      headerName: "Start Date",
+      width: 180,
+      editable: false,
+    },
+    { field: "endDate", headerName: "End Date", width: 180, editable: false },
+    { field: "location", headerName: "Location", width: 150, editable: true },
+    { field: "thumbnail", headerName: "Thumbnail", width: 150, editable: true },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 150,
+      editable: true,
+      type: "singleSelect",
+      valueOptions: ["Completed", "Ongoing"],
+    },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
+      width: 100,
+      cellClassName: "actions",
+      getActions: ({ id }) => {
+        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+
+        return isInEditMode
+          ? [
+              <GridActionsCellItem
+                key="save"
+                icon={<SaveIcon />}
+                label="Save"
+                color="warning"
+                onClick={handleSaveClick(id)}
+              />,
+              <GridActionsCellItem
+                key="cancel"
+                icon={<CancelIcon />}
+                label="Cancel"
+                onClick={handleCancelClick(id)}
+                color="warning"
+              />,
+            ]
+          : [
+              <GridActionsCellItem
+                key="edit"
+                icon={<EditIcon />}
+                label="Edit"
+                color="warning"
+                onClick={handleEditClick(id)}
+              />,
+            ];
+      },
+    },
+  ];
 
   return (
-    <div>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 350 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell width={150}>Name</TableCell>
-              <TableCell width={150}>Start Date</TableCell>
-              <TableCell width={150}>End Date</TableCell>
-              <TableCell width={150}>Location</TableCell>
-              <TableCell width={150}>Thumbnail</TableCell>
-              <TableCell width={150}>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(rowsPerPage > 0
-              ? events.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
-              : events
-            ).map((event: any) => (
-              <TableRow key={event.id}>
-                <TableCell>{event.name}</TableCell>
-                <TableCell>
-                  {new Date(event.startDate).toLocaleString().split(",")[0]}
-                </TableCell>
-                <TableCell>
-                  {new Date(event.endDate).toLocaleString().split(",")[0]}
-                </TableCell>
-                <TableCell>{event.location}</TableCell>
-                <TableCell>{event.thumbnail}</TableCell>
-                <TableCell>{event.status}</TableCell>
-              </TableRow>
-            ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={7} />
-              </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={7}
-                count={events.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
-    </div>
+    <Container>
+      <Box sx={{ height: 400, width: "100%" }}>
+        <DataGrid
+          style={{ backgroundColor: "white" }}
+          rows={events}
+          columns={columns}
+          filterMode="client"
+          editMode="row"
+          rowModesModel={rowModesModel}
+          onRowModesModelChange={(newModel) => setRowModesModel(newModel)}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
+              },
+            },
+          }}
+          slots={{
+            toolbar: CreateNewEvent as GridSlots["toolbar"],
+          }}
+          pageSizeOptions={[5]}
+          processRowUpdate={processRowUpdate}
+          disableRowSelectionOnClick
+        />
+      </Box>
+    </Container>
   );
 }

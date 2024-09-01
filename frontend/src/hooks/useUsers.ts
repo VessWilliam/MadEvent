@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { loginService, registerService } from "../service/usersService";
+import { IUserCredentials, IUserRegistration } from "../types/usersTypes";
 
-export const usersHook = () => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+export const useUsers = () => {
   const navigate = useNavigate();
 
-  const login = async (email: string, password: string) => {
+  const login = async (userLogin: IUserCredentials) => {
     try {
-      const result = await loginService(email, password);
+      const result = await loginService(userLogin);
       localStorage.setItem("authToken", result.token);
       navigate("/");
       return result;
@@ -17,18 +17,11 @@ export const usersHook = () => {
     }
   };
 
-  const registerUser = async (
-    name: string,
-    role: string,
-    email: string,
-    password: string
-  ) => {
+  const registerUser = async (createUser: IUserRegistration) => {
     try {
-      const result = await registerService(name, role, email, password);
-
+      const result = await registerService(createUser);
       localStorage.setItem("authToken", result.token);
       navigate("/");
-
       return result;
     } catch (error: any) {
       console.error(error.message);

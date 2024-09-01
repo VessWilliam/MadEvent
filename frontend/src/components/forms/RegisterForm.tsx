@@ -10,15 +10,8 @@ import {
   FormControl,
 } from "@mui/material";
 import FaceIcon from "@mui/icons-material/Face";
-import { usersHook } from "../../hooks/usersHook";
-
-interface RegisterFormValues {
-  name: string;
-  role: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+import { useUsers } from "../../hooks/useUsers";
+import { IUserRegistration } from "../../types/usersTypes";
 
 export default function RegisterForm() {
   const {
@@ -26,12 +19,12 @@ export default function RegisterForm() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<RegisterFormValues>();
-  const { registerUser } = usersHook();
+  } = useForm<IUserRegistration>();
+  const { registerUser } = useUsers();
 
-  const onSubmit = async (data: RegisterFormValues) => {
+  const onSubmit = async (data: IUserRegistration) => {
     try {
-      await registerUser(data.name, data.role, data.email, data.password);
+      await registerUser(data);
     } catch (error: any) {
       console.error("register failed:", error.message);
     }

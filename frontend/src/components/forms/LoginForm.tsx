@@ -2,25 +2,20 @@ import { useForm } from "react-hook-form";
 import { TextField, Button, Paper, Chip } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
 import { Link } from "react-router-dom";
-import { usersHook } from "../../hooks/usersHook";
-
-
-interface LoginFormValues {
-  email: string;
-  password: string;
-}
+import { useUsers } from "../../hooks/useUsers";
+import { IUserCredentials } from "../../types/usersTypes";
 
 export default function LoginForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormValues>();
-  const { login } = usersHook();
+  } = useForm<IUserCredentials>();
+  const { login } = useUsers();
 
-  const onSubmit = async (data: LoginFormValues) => {
+  const onSubmit = async (data: IUserCredentials) => {
     try {
-      await login(data.email, data.password);
+      await login(data);
     } catch (error: any) {
       console.error("Login failed:", error.message);
     }
