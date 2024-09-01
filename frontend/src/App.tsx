@@ -3,6 +3,7 @@ import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import NavBar from './components/NavBar';
 import RegisterPage from './pages/RegisterPage';
+import EventsPage from './pages/EventsPage';
 
 
 export default function App() {
@@ -11,6 +12,7 @@ export default function App() {
       <NavBar />
       <Routes>
         <Route path='/' element={<HomePage />} />
+        <Route path='/dashboard' element={<EventsPage/>}/>
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
       </Routes>

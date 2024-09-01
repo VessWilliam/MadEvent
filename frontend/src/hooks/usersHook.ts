@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { loginService, registerService } from "../service/usersService";
 
-export const useAuth = () => {
+export const usersHook = () => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const navigate = useNavigate();
 
   const login = async (email: string, password: string) => {

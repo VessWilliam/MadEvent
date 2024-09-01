@@ -4,6 +4,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useNavigate, Link } from "react-router-dom";
+import { getRoleFromToken } from "../utils/jwtUtils"
 
 export default function NavBar() {
   const navigate = useNavigate();
@@ -13,7 +14,9 @@ export default function NavBar() {
     navigate("/");
   };
 
-  const isLoggedIn = !!localStorage.getItem("authToken");
+  const token = localStorage.getItem("authToken");
+  const isLoggedIn = !!token;
+  const role = token ? getRoleFromToken(token) : null;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -27,16 +30,33 @@ export default function NavBar() {
           >
             Eve
           </Typography>
-
-          {!isLoggedIn ? (
-            <Button component={Link} to="/login" color="inherit">
-              Login
-            </Button>
-          ) : (
-            <Button onClick={handleLogoutClick} color="inherit">
-              Logout
-            </Button>
-          )}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {isLoggedIn && role === 'admin' && (
+              <Button
+                component={Link}
+                to="/dashboard"
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Dashboard
+              </Button>
+            )}
+            {!isLoggedIn ? (
+              <Button
+                component={Link}
+                to="/login"
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Login
+              </Button>
+            ) : (
+              <Button
+                onClick={handleLogoutClick}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Logout
+              </Button>
+            )}
+          </Box>
         </Toolbar>
       </AppBar>
     </Box>

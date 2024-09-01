@@ -10,7 +10,7 @@ import {
   FormControl,
 } from "@mui/material";
 import FaceIcon from "@mui/icons-material/Face";
-import { useAuth } from "../../hooks/usersHook";
+import { usersHook } from "../../hooks/usersHook";
 
 interface RegisterFormValues {
   name: string;
@@ -27,7 +27,7 @@ export default function RegisterForm() {
     watch,
     formState: { errors },
   } = useForm<RegisterFormValues>();
-  const { registerUser } = useAuth();
+  const { registerUser } = usersHook();
 
   const onSubmit = async (data: RegisterFormValues) => {
     try {
