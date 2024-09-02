@@ -1,66 +1,69 @@
-import { useState, useEffect } from "react";
-import {
-  createEventsService,
-  deleteEventService,
-  getAllEventService,
-  updateEventService,
-} from "../service/eventsService";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { IEvent } from "../types/eventTypes";
+import {
+  getAllEventService,
+  createEventsService,
+  updateEventService,
+  deleteEventService,
+} from "../service/eventsService";
 import { useNavigate } from "react-router-dom";
 
-const splitDate = (dateTimeString: string) => {
-  const [date, time] = dateTimeString.split("T");
-  return { date, time };
+const queryKeys = {
+  events: ["events"] as const,
+  eventById: (id: string) => ["event", id] as const,
 };
 
-export const useEvents = () => {
-  const [events, setEvents] = useState<IEvent[]>([]);
+const handleError = (error: any, message: string) => {
+  console.error(`${message}:`, error.message);
+};
+
+export const useGetAllEvents = () => {
+  return useQuery<IEvent[]>({
+    queryKey: queryKeys.events,
+    queryFn: getAllEventService,
+  });
+};
+
+export const useCreateEvent = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const data = await getAllEventService();
-        const processedData = data.map((event: any) => ({
-          ...event,
-          startDate: splitDate(event.startDate).date,
-          endDate: splitDate(event.endDate).date,
-        }));
-        setEvents(processedData);
-      } catch (error: any) {
-        console.error("Failed to fetch events", error);
-      }
-    };
-    fetchEvents();
-  }, []);
+  return useMutation<void, Error, IEvent>({
+    mutationFn: createEventsService,
+    onSuccess: () => {
+      queryClient.invalidateQueries(queryKeys.events as any);
+      navigate("/dashboard");
+    },
+    onError: (error) => handleError(error, "Failed to create event"),
+  });
+};
 
-  const updateEvent = async (id: string, updatedData: IEvent) => {
-    try {
+export const useUpdateEvent = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, { id: string; updatedData: IEvent }>({
+    mutationFn: async ({ id, updatedData }) => {
       await updateEventService(id, updatedData);
-    } catch (error: any) {
-      console.error("Failed to update event", error);
-    }
-  };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(queryKeys.events as any);
+    },
+    onError: (error) => handleError(error, "Failed to update event"),
+  });
+};
 
-  const createEvent = async (createData: IEvent) => {
-    try {
-      const result = await createEventsService(createData);
-      if (result) {
-        navigate("/dashboard");
-      }
-    } catch (error: any) {
-      console.error("Failed to update event", error);
-    }
-  };
+export const useDeleteEvent = () => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
-  const deleteEvent = async (id: string) => {
-    try {
+  return useMutation<void, Error, string>({
+    mutationFn: async (id) => {
       await deleteEventService(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(queryKeys.events as any);
       navigate(0);
-    } catch (error) {
-      console.error("Failed to delete event", error);
-    }
-  };
-
-  return { events, updateEvent, createEvent, deleteEvent };
+    },
+    onError: (error) => handleError(error, "Failed to delete event"),
+  });
 };

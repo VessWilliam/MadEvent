@@ -12,7 +12,7 @@ import {
   Container,
 } from "@mui/material";
 import FaceIcon from "@mui/icons-material/Face";
-import { useUsers } from "../../hooks/useUsers";
+import { useRegisterUser } from "../../hooks/useUsers";
 import { IUserRegistration } from "../../types/usersTypes";
 
 export default function RegisterForm() {
@@ -22,7 +22,7 @@ export default function RegisterForm() {
     watch,
     formState: { errors },
   } = useForm<IUserRegistration>();
-  const { registerUser } = useUsers();
+  const { mutate: registerUser } = useRegisterUser();
 
   const onSubmit = async (data: IUserRegistration) => {
     try {

@@ -19,8 +19,6 @@ export const createEventsService = async (createEvent: IEvent) => {
     if (response.status < 200 || response.status >= 300) {
       console.error(`Create with status code ${response.status}`);
     }
-
-    console.log(response.data);
     return response.data;
   } catch (error: any) {
     console.error(`Error Create event: ${error.message}`);
@@ -45,7 +43,27 @@ export const getAllEventService = async () => {
     if (response.status < 200 || response.status >= 300) {
       console.error(`Get all with status code ${response.status}`);
     }
-    return response.data;
+
+    const events = response.data.map((event: IEvent) => {
+      const startDateStr =
+        event.startDate instanceof Date
+          ? event.startDate.toString()
+          : event.startDate || "";
+      const endDateStr =
+        event.endDate instanceof Date
+          ? event.endDate.toString()
+          : event.endDate || "";
+
+      const startDatePart = startDateStr.split("T")[0];
+      const endDatePart = endDateStr.split("T")[0];
+      return {
+        ...event,
+        startDate: startDatePart,
+        endDate: endDatePart,
+      };
+    });
+
+    return events;
   } catch (error: any) {
     console.error(`Error get all in: ${error.message}`);
   }

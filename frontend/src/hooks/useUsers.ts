@@ -1,33 +1,38 @@
+import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { loginService, registerService } from "../service/usersService";
 import { IUserCredentials, IUserRegistration } from "../types/usersTypes";
 
-export const useUsers = () => {
+const handleError = (error: any, action: string) => {
+  console.error(`${action} failed:`, error.message);
+};
+
+export const useLogin = () => {
   const navigate = useNavigate();
 
-  const login = async (userLogin: IUserCredentials) => {
-    try {
-      const result = await loginService(userLogin);
-      localStorage.setItem("authToken", result.token);
+  return useMutation({
+    mutationFn: async (userLogin: IUserCredentials) => {
+      return await loginService(userLogin);
+    },
+    onSuccess: (data) => {
+      localStorage.setItem("authToken", data.token);
       navigate("/");
-      return result;
-    } catch (error: any) {
-      console.error(error.message);
-      return null;
-    }
-  };
+    },
+    onError: (error) => handleError(error, "Login"),
+  });
+};
 
-  const registerUser = async (createUser: IUserRegistration) => {
-    try {
-      const result = await registerService(createUser);
-      localStorage.setItem("authToken", result.token);
+export const useRegisterUser = () => {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: async (createUser: IUserRegistration) => {
+      return await registerService(createUser);
+    },
+    onSuccess: (data) => {
+      localStorage.setItem("authToken", data.token);
       navigate("/");
-      return result;
-    } catch (error: any) {
-      console.error(error.message);
-      return null;
-    }
-  };
-
-  return { login, registerUser };
+    },
+    onError: (error) => handleError(error, "Registration"),
+  });
 };

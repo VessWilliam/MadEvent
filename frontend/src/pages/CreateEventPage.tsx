@@ -1,5 +1,5 @@
-import CreateEventForm from "../components/forms/CreateEventForm";
 import Box from "@mui/material/Box";
+import CreateEventForm from "../components/forms/CreateEventForm";
 
 export default function CreateEventPage() {
   return (

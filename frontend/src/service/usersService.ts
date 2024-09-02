@@ -17,11 +17,9 @@ export const loginService = async (userLogin: IUserCredentials) => {
 export const registerService = async (createUser: IUserRegistration) => {
   try {
     const response = await apiClient.post("/users/register", createUser);
-    console.log("hello" ,createUser)
     if (response.status < 200 || response.status >= 300) {
       console.error(`Register failed with status code ${response.status}`);
     }
-    ;
     return response.data;
   } catch (error: any) {
     console.error(`Error register in: ${error.message}`);

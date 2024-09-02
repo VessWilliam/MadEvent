@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { IEvent } from "../../types/eventTypes";
 import EventIcon from "@mui/icons-material/Event";
-import { useEvents } from "../../hooks/useEvents";
+import { useCreateEvent } from "../../hooks/useEvents";
 
 export default function CreateEventForm() {
   const {
@@ -17,7 +17,7 @@ export default function CreateEventForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<IEvent>();
-  const { createEvent } = useEvents();
+  const { mutate: createEvent } = useCreateEvent();
 
   const onSubmit = async (data: IEvent) => {
     try {
@@ -70,7 +70,7 @@ export default function CreateEventForm() {
                 fullWidth
                 error={!!errors.name}
                 helperText={errors.name?.message}
-                sx={{ mb: 2 }} 
+                sx={{ mb: 2 }}
               />
             )}
           />
@@ -88,7 +88,7 @@ export default function CreateEventForm() {
                 fullWidth
                 error={!!errors.location}
                 helperText={errors.location?.message}
-                sx={{ mb: 2 }} 
+                sx={{ mb: 2 }}
               />
             )}
           />
@@ -105,7 +105,7 @@ export default function CreateEventForm() {
                 fullWidth
                 error={!!errors.startDate}
                 helperText={errors.startDate?.message}
-                sx={{ mb: 2 }} 
+                sx={{ mb: 2 }}
               />
             )}
           />
@@ -122,7 +122,7 @@ export default function CreateEventForm() {
                 fullWidth
                 error={!!errors.endDate}
                 helperText={errors.endDate?.message}
-                sx={{ mb: 2 }} 
+                sx={{ mb: 2 }}
               />
             )}
           />
@@ -141,7 +141,7 @@ export default function CreateEventForm() {
                 fullWidth
                 error={!!errors.status}
                 helperText={errors.status?.message}
-                sx={{ mb: 2 }} 
+                sx={{ mb: 2 }}
               >
                 <MenuItem value="Completed">Completed</MenuItem>
                 <MenuItem value="Ongoing">Ongoing</MenuItem>
@@ -149,7 +149,7 @@ export default function CreateEventForm() {
             )}
           />
 
-          <Controller            
+          <Controller
             name="thumbnail"
             control={control}
             defaultValue=""
@@ -162,7 +162,7 @@ export default function CreateEventForm() {
                 fullWidth
                 error={!!errors.thumbnail}
                 helperText={errors.thumbnail?.message}
-                sx={{ mb: 2 }} 
+                sx={{ mb: 2 }}
               />
             )}
           />
@@ -170,7 +170,7 @@ export default function CreateEventForm() {
           <Container
             sx={{
               display: "flex",
-              justifyContent: "center", 
+              justifyContent: "center",
             }}
           >
             <Button type="submit" variant="contained" color="warning" fullWidth>

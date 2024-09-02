@@ -18,7 +18,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { Link } from "react-router-dom";
 import { useState, useCallback } from "react";
-import { useEvents } from "../../hooks/useEvents";
+import {
+  useGetAllEvents,
+  useUpdateEvent,
+  useDeleteEvent,
+} from "../../hooks/useEvents";
 import { IEvent } from "../../types/eventTypes";
 
 function CreateNewEvent() {
@@ -38,7 +42,9 @@ function CreateNewEvent() {
 }
 
 export default function DataGridDemo() {
-  const { events, updateEvent, deleteEvent } = useEvents();
+  const { data: events = [], isLoading, error } = useGetAllEvents();
+  const { mutate: updateEvent } = useUpdateEvent();
+  const { mutate: deleteEvent } = useDeleteEvent();
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
   const handleSaveClick = useCallback(
@@ -49,26 +55,6 @@ export default function DataGridDemo() {
       }));
     },
     []
-  );
-
-  const processRowUpdate = useCallback(
-    async (newRow: GridRowModel) => {
-      const updatedRow = { ...newRow } as IEvent;
-
-      try {
-        await updateEvent(updatedRow.id as any, {
-          name: updatedRow.name,
-          location: updatedRow.location,
-          thumbnail: updatedRow.thumbnail,
-          status: updatedRow.status,
-        });
-      } catch (error) {
-        console.error("Failed to update event", error);
-      }
-
-      return updatedRow;
-    },
-    [updateEvent]
   );
 
   const handleCancelClick = useCallback(
@@ -91,6 +77,28 @@ export default function DataGridDemo() {
     []
   );
 
+  const processRowUpdate = useCallback(
+    async (newRow: GridRowModel) => {
+      const updatedRow = { ...newRow } as IEvent;
+      try {
+        await updateEvent({
+          id: updatedRow.id as string,
+          updatedData: {
+            name: updatedRow.name as string,
+            location: updatedRow.location as string,
+            thumbnail: updatedRow.thumbnail as string,
+            status: updatedRow.status as string,
+          },
+        });
+      } catch (error) {
+        console.error("Failed to update event", error);
+      }
+
+      return updatedRow;
+    },
+    [updateEvent]
+  );
+
   const handleDeleteClick = useCallback(
     (id: GridRowId) => async () => {
       try {
@@ -109,8 +117,15 @@ export default function DataGridDemo() {
       headerName: "Start Date",
       width: 180,
       editable: false,
+      valueFormatter: ({ value }) => value,
     },
-    { field: "endDate", headerName: "End Date", width: 180, editable: false },
+    {
+      field: "endDate",
+      headerName: "End Date",
+      width: 180,
+      editable: false,
+      valueFormatter: ({ value }) => value,
+    },
     { field: "location", headerName: "Location", width: 150, editable: true },
     { field: "thumbnail", headerName: "Thumbnail", width: 150, editable: true },
     {
@@ -167,13 +182,13 @@ export default function DataGridDemo() {
     },
   ];
 
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error loading events</p>;
+
   return (
     <Container>
       <Box sx={{ height: 400, width: "100%" }}>
         <DataGrid
-          sx={{
-         
-          }}
           rows={events}
           columns={columns}
           filterMode="client"
