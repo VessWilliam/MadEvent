@@ -7,4 +7,5 @@ router.put("/:id", eventController_1.updateEvent);
 router.get("/all", eventController_1.getAllEvents);
 router.get("/:id", eventController_1.getEventsById);
 router.post("/create", eventController_1.createEvent);
+router.delete("/:id", eventController_1.deleteEvent);
 exports.default = router;

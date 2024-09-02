@@ -92,5 +92,21 @@ class EventService {
             }
         });
     }
+    deleteEvent(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const event = yield eventModel_1.default.findById(id).exec();
+                if (!event) {
+                    return "Event not found";
+                }
+                yield event.deleteOne();
+                return "Event successfully deleted";
+            }
+            catch (error) {
+                const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+                return `Error deleting event: ${errorMessage}`;
+            }
+        });
+    }
 }
 exports.default = new EventService();

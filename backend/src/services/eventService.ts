@@ -19,7 +19,7 @@ class EventService {
   async getAllEvent(): Promise<EventResponse[] | string> {
     try {
       const events = await EventModel.find().lean();
-      return events.map((event) => this.mapEventResponse(event));
+      return events.map((event: IEvent) => this.mapEventResponse(event));
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error occurred";
@@ -89,6 +89,23 @@ class EventService {
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error occurred";
       return `Error updating event: ${errorMessage}`;
+    }
+  }
+
+  async deleteEvent(id: string): Promise<string> {
+    try {
+      const event = await EventModel.findById(id).exec();
+
+      if (!event) {
+        return "Event not found";
+      }
+      await event.deleteOne();
+
+      return "Event successfully deleted";
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
+      return `Error deleting event: ${errorMessage}`;
     }
   }
 }

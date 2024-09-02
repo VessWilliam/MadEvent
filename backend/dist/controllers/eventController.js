@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateEvent = exports.getEventsById = exports.getAllEvents = exports.createEvent = void 0;
+exports.deleteEvent = exports.updateEvent = exports.getEventsById = exports.getAllEvents = exports.createEvent = void 0;
 const eventService_1 = __importDefault(require("../services/eventService"));
 const createEvent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -66,3 +66,20 @@ const updateEvent = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.updateEvent = updateEvent;
+const deleteEvent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const result = yield eventService_1.default.deleteEvent(id);
+        if (result === "Event not found") {
+            return res.status(404).json({ message: result });
+        }
+        return res.status(200).json({ message: result });
+    }
+    catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+        return res
+            .status(500)
+            .json({ message: `Error deleting event: ${errorMessage}` });
+    }
+});
+exports.deleteEvent = deleteEvent;

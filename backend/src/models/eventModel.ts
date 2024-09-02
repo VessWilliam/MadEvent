@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IEvent extends Document {
+  _id: string;
   name: string;
   startDate: Date;
   endDate: Date;
