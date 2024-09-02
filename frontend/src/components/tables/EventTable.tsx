@@ -13,17 +13,24 @@ import {
 import { Button, Container } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
-import { useEvents } from "../../hooks/useEvents";
 import AddIcon from "@mui/icons-material/Add";
-import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import { Link } from "react-router-dom";
 import { useState, useCallback } from "react";
+import { useEvents } from "../../hooks/useEvents";
 import { IEvent } from "../../types/eventTypes";
 
 function CreateNewEvent() {
   return (
     <GridToolbarContainer>
-      <Button color="primary" component={Link} to="/createvent" startIcon={<AddIcon />} >
+      <Button
+        color="primary"
+        component={Link}
+        to="/createvent"
+        startIcon={<AddIcon />}
+        sx={{ textTransform: "none" }}
+      >
         Add record
       </Button>
     </GridToolbarContainer>
@@ -31,7 +38,7 @@ function CreateNewEvent() {
 }
 
 export default function DataGridDemo() {
-  const { events, updateEvent } = useEvents();
+  const { events, updateEvent, deleteEvent } = useEvents();
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
   const handleSaveClick = useCallback(
@@ -84,6 +91,17 @@ export default function DataGridDemo() {
     []
   );
 
+  const handleDeleteClick = useCallback(
+    (id: GridRowId) => async () => {
+      try {
+        await deleteEvent(id.toString());
+      } catch (error) {
+        console.error("Failed to delete event", error);
+      }
+    },
+    [deleteEvent]
+  );
+
   const columns: GridColDef<IEvent>[] = [
     { field: "name", headerName: "Name", width: 150, editable: true },
     {
@@ -114,30 +132,37 @@ export default function DataGridDemo() {
 
         return isInEditMode
           ? [
-            <GridActionsCellItem
-              key="save"
-              icon={<SaveIcon />}
-              label="Save"
-              color="warning"
-              onClick={handleSaveClick(id)}
-            />,
-            <GridActionsCellItem
-              key="cancel"
-              icon={<CancelIcon />}
-              label="Cancel"
-              onClick={handleCancelClick(id)}
-              color="warning"
-            />,
-          ]
+              <GridActionsCellItem
+                key="save"
+                icon={<SaveIcon />}
+                label="Save"
+                color="warning"
+                onClick={handleSaveClick(id)}
+              />,
+              <GridActionsCellItem
+                key="cancel"
+                icon={<CancelIcon />}
+                label="Cancel"
+                onClick={handleCancelClick(id)}
+                color="warning"
+              />,
+            ]
           : [
-            <GridActionsCellItem
-              key="edit"
-              icon={<EditIcon />}
-              label="Edit"
-              color="warning"
-              onClick={handleEditClick(id)}
-            />,
-          ];
+              <GridActionsCellItem
+                key="edit"
+                icon={<EditIcon />}
+                label="Edit"
+                color="warning"
+                onClick={handleEditClick(id)}
+              />,
+              <GridActionsCellItem
+                key="delete"
+                icon={<DeleteIcon />}
+                label="Delete"
+                onClick={handleDeleteClick(id)}
+                color="inherit"
+              />,
+            ];
       },
     },
   ];
@@ -146,7 +171,9 @@ export default function DataGridDemo() {
     <Container>
       <Box sx={{ height: 400, width: "100%" }}>
         <DataGrid
-          style={{ backgroundColor: "white" }}
+          sx={{
+         
+          }}
           rows={events}
           columns={columns}
           filterMode="client"

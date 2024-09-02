@@ -1,14 +1,18 @@
-import LoginForm from '../components/forms/LoginForm';
-
+import Box from "@mui/material/Box";
+import LoginForm from "../components/forms/LoginForm";
 
 export default function LoginPage() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-transparent">
+    <Box
+      sx={{
+        mt: 3,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "transparent",
+      }}
+    >
       <LoginForm />
-    </div>
+    </Box>
   );
 }
-
-
-
-

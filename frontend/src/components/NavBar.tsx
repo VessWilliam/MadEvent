@@ -4,7 +4,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useNavigate, Link } from "react-router-dom";
-import { getRoleFromToken } from "../utils/jwtUtils"
+import { getRoleFromToken } from "../utils/jwtUtils";
 
 export default function NavBar() {
   const navigate = useNavigate();
@@ -30,8 +30,8 @@ export default function NavBar() {
           >
             Eve
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {isLoggedIn && role === 'admin' && (
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            {isLoggedIn && role === "admin" && (
               <Button
                 component={Link}
                 to="/dashboard"

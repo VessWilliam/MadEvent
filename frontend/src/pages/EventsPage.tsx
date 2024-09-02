@@ -1,9 +1,19 @@
 import EventTable from "../components/tables/EventTable";
+import Box from "@mui/material/Box";
 
 export default function EventsPage() {
   return (
-    <div className="flex items-center justify-center mt-10 min-w-fit bg-transparent">
-        <EventTable/>
-    </div>
-  )
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        mt: 3,
+        minWidth: "fit-content",
+        backgroundColor: "transparent",
+      }}
+    >
+      <EventTable />
+    </Box>
+  );
 }

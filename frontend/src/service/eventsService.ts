@@ -1,6 +1,17 @@
 import apiClient from "../api/apiClient";
 import { IEvent } from "../types/eventTypes";
 
+export const deleteEventService = async (id: string) => {
+  try {
+    const response = await apiClient.delete(`/event/${id}`);
+    if (response.status < 200 || response.status >= 300) {
+      console.error(`Delete with status code ${response.status}`);
+    }
+  } catch (error: any) {
+    console.error(`Error delete event: ${error.message}`);
+  }
+};
+
 export const createEventsService = async (createEvent: IEvent) => {
   try {
     const response = await apiClient.post("/event/create", createEvent);

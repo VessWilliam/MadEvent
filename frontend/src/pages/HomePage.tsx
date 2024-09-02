@@ -1,11 +1,26 @@
 
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+
 export default function HomePage() {
   return (
-    <div className="flex items-center justify-center mt-10 min-w-fit bg-transparent">
-      <h1 className=" text-slate-300 text-center justify-center text-3xl">
-        {" "}
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        mt: 3,
+        minWidth: "fit-content",
+        backgroundColor: "transparent",
+      }}
+    >
+      <Typography
+        variant="h3"
+        align="center"
+        sx={{ color: "slategray" }}
+      >
         Event Manage App
-      </h1>
-    </div>
+      </Typography>
+    </Box>
   );
 }

@@ -30,15 +30,29 @@ export default function CreateEventForm() {
   return (
     <Container>
       <Paper
-        className="p-6 w-80 mx-auto mt-10"
-        style={{ backgroundColor: "#C0C0C0", padding: "20px" }}
+        sx={{
+          padding: 2,
+          maxWidth: 400,
+          margin: "20px auto",
+          backgroundColor: "inherit",
+        }}
       >
-        <div className="flex justify-center mb-4">
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "16px",
+          }}
+        >
           <Chip
             icon={<EventIcon />}
             label="Events"
             color="warning"
             variant="outlined"
+            sx={{
+              mb: 2,
+              margin: "10px",
+            }}
           />
         </div>
 
@@ -56,6 +70,7 @@ export default function CreateEventForm() {
                 fullWidth
                 error={!!errors.name}
                 helperText={errors.name?.message}
+                sx={{ mb: 2 }} 
               />
             )}
           />
@@ -73,6 +88,7 @@ export default function CreateEventForm() {
                 fullWidth
                 error={!!errors.location}
                 helperText={errors.location?.message}
+                sx={{ mb: 2 }} 
               />
             )}
           />
@@ -89,6 +105,7 @@ export default function CreateEventForm() {
                 fullWidth
                 error={!!errors.startDate}
                 helperText={errors.startDate?.message}
+                sx={{ mb: 2 }} 
               />
             )}
           />
@@ -105,6 +122,7 @@ export default function CreateEventForm() {
                 fullWidth
                 error={!!errors.endDate}
                 helperText={errors.endDate?.message}
+                sx={{ mb: 2 }} 
               />
             )}
           />
@@ -123,6 +141,7 @@ export default function CreateEventForm() {
                 fullWidth
                 error={!!errors.status}
                 helperText={errors.status?.message}
+                sx={{ mb: 2 }} 
               >
                 <MenuItem value="Completed">Completed</MenuItem>
                 <MenuItem value="Ongoing">Ongoing</MenuItem>
@@ -130,7 +149,7 @@ export default function CreateEventForm() {
             )}
           />
 
-          <Controller
+          <Controller            
             name="thumbnail"
             control={control}
             defaultValue=""
@@ -143,13 +162,21 @@ export default function CreateEventForm() {
                 fullWidth
                 error={!!errors.thumbnail}
                 helperText={errors.thumbnail?.message}
+                sx={{ mb: 2 }} 
               />
             )}
           />
 
-          <Button type="submit" variant="contained" color="warning" fullWidth>
-            Create Event
-          </Button>
+          <Container
+            sx={{
+              display: "flex",
+              justifyContent: "center", 
+            }}
+          >
+            <Button type="submit" variant="contained" color="warning" fullWidth>
+              Create Event
+            </Button>
+          </Container>
         </form>
       </Paper>
     </Container>

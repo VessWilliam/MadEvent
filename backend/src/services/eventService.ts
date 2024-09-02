@@ -45,10 +45,16 @@ class EventService {
 
   async createEvent(eventData: IEvent): Promise<EventResponse | string> {
     try {
-      const startDate = new Date();
-      const endDate = new Date();
-      endDate.setDate(startDate.getDate() + 3);
+      const startDate = eventData.startDate
+        ? new Date(eventData.startDate)
+        : new Date();
 
+      const endDate = eventData.endDate
+        ? new Date(eventData.endDate)
+        : new Date();
+      if (!eventData.endDate) {
+        endDate.setDate(startDate.getDate() + 3);
+      }
       const validateEvent = validateSchema(eventSchema, {
         ...eventData,
         startDate,

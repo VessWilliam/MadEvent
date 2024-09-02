@@ -1,9 +1,19 @@
 import CreateEventForm from "../components/forms/CreateEventForm";
+import Box from "@mui/material/Box";
 
 export default function CreateEventPage() {
   return (
-    <div className="flex items-center justify-center mt-10 min-w-fit bg-transparent">
-     <CreateEventForm/>
-    </div>
-  )
+    <Box
+      sx={{
+        mt: 1,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        minWidth: "fit-content",
+        backgroundColor: "transparent",
+      }}
+    >
+      <CreateEventForm />
+    </Box>
+  );
 }

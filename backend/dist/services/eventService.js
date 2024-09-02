@@ -57,9 +57,15 @@ class EventService {
     createEvent(eventData) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const startDate = new Date();
-                const endDate = new Date();
-                endDate.setDate(startDate.getDate() + 3);
+                const startDate = eventData.startDate
+                    ? new Date(eventData.startDate)
+                    : new Date();
+                const endDate = eventData.endDate
+                    ? new Date(eventData.endDate)
+                    : new Date();
+                if (!eventData.endDate) {
+                    endDate.setDate(startDate.getDate() + 3);
+                }
                 const validateEvent = (0, validateSchema_1.validateSchema)(dbSchema_1.eventSchema, Object.assign(Object.assign({}, eventData), { startDate,
                     endDate }));
                 if (typeof validateEvent === "string") {
