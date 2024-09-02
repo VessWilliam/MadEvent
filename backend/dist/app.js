@@ -9,9 +9,15 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const eventRoutes_1 = __importDefault(require("./routes/eventRoutes"));
 const authMiddle_1 = require("./middleware/authMiddle");
+const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 5000;
+app.use((0, cors_1.default)({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+}));
 app.use(authMiddle_1.auth);
 app.use(express_1.default.json());
 // User routes
