@@ -14,7 +14,7 @@ export default function EventDetailPage() {
         backgroundColor: "transparent",
       }}
     >
-      {id ? <EventDetail id={id} /> : <h3>Event ID is not available</h3>}
+      {id ? <EventDetail id={id} /> : <h3>Need Login to Show the Detail</h3>}
     </Box>
   );
 }
