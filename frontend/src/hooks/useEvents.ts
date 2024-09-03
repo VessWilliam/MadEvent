@@ -5,6 +5,7 @@ import {
   createEventsService,
   updateEventService,
   deleteEventService,
+  getEventByIdService,
 } from "../service/eventsService";
 import { useNavigate } from "react-router-dom";
 
@@ -67,3 +68,12 @@ export const useDeleteEvent = () => {
     onError: (error) => handleError(error, "Failed to delete event"),
   });
 };
+
+
+export const useEventGetByID = (id: string) => {
+  return useQuery({
+    queryKey: queryKeys.eventById(id),
+    queryFn: () => getEventByIdService(id),
+    enabled: !!id, 
+  });
+}

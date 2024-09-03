@@ -37,6 +37,26 @@ export const updateEventService = async (id: string, updatedata: IEvent) => {
   }
 };
 
+export const getEventByIdService = async (id: string) => {
+  try {
+    const response = await apiClient.get(`/event/${id}`);
+    if (response.status < 200 || response.status >= 300) {
+      console.error(`Get by ID status code ${response.status}`);
+      return null;
+    }
+
+    const event = response.data;
+
+    event.startDate = event.startDate.split("T")[0];
+    event.endDate = event.endDate.split("T")[0];
+
+    return event;
+  } catch (error: any) {
+    console.error(`Error fetching event by ID: ${error.message}`);
+    return null;
+  }
+};
+
 export const getAllEventService = async () => {
   try {
     const response = await apiClient.get("/event/all");

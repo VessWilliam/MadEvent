@@ -1,6 +1,6 @@
 
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import Gallery from "../components/Gallery";
 
 export default function HomePage() {
   return (
@@ -9,18 +9,11 @@ export default function HomePage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        mt: 3,
-        minWidth: "fit-content",
+        minHeight: "fit-content",
         backgroundColor: "transparent",
       }}
     >
-      <Typography
-        variant="h3"
-        align="center"
-        sx={{ color: "slategray" }}
-      >
-        Event Manage App
-      </Typography>
+      <Gallery/>
     </Box>
   );
 }

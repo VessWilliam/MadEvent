@@ -41,7 +41,7 @@ function CreateNewEvent() {
   );
 }
 
-export default function DataGridDemo() {
+export default function EventTable() {
   const { data: events = [], isLoading, error } = useGetAllEvents();
   const { mutate: updateEvent } = useUpdateEvent();
   const { mutate: deleteEvent } = useDeleteEvent();
