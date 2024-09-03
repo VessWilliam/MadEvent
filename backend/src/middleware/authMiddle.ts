@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "../utils/jwtUtills";
 
-const publicRoutes = ["/api/users/login", "/api/users/register"];
+const publicRoutes = ["/api/users/login", "/api/users/register","/api/event/all"];
 
 export const auth = (req: Request, res: Response, next: NextFunction) => {
   try {

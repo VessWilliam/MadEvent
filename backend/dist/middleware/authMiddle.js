@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.auth = void 0;
 const jwtUtills_1 = require("../utils/jwtUtills");
-const publicRoutes = ["/api/users/login", "/api/users/register"];
+const publicRoutes = ["/api/users/login", "/api/users/register", "/api/event/all"];
 const auth = (req, res, next) => {
     var _a;
     try {
