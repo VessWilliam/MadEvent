@@ -28,7 +28,7 @@ export default function NavBar() {
             variant="h6"
             sx={{ flexGrow: 1, textDecoration: "none", color: "inherit" }}
           >
-            Eve
+            MadEvent
           </Typography>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {isLoggedIn && role === "admin" && (

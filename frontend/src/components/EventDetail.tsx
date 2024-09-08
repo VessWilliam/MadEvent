@@ -23,7 +23,7 @@ export default function EventDetail({ id }: { id: string }) {
   }
 
   return (
-    <Card sx={{ width: 300, height: 450 }}>
+    <Card sx={{ width: 350, height: 450 }}>
       <CardMedia
         sx={{ height: 140 }}
         image={event.thumbnail || "/static/images/default.jpg"}

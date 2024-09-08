@@ -7,6 +7,7 @@ export default function EventDetailPage() {
   return (
     <Box
       sx={{
+        mt:15,
         display: "flex",
         alignItems: "flex-start",
         justifyContent: "center",

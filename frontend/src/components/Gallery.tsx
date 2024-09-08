@@ -20,7 +20,7 @@ export default function Gallery() {
   };
 
   return (
-    <ImageList sx={{ width: 500, height: 500 }}>
+    <ImageList sx={{ width: 350, height: 500 }}>
       <ImageListItem key="Subheader" cols={2}></ImageListItem>
       <ListSubheader>Events</ListSubheader>
       {events.map((item) => (
